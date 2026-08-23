@@ -1,8 +1,18 @@
 # Travel Assistant — LangGraph Agent with OpenTelemetry Observability
 
+[![Tests](https://github.com/morillo/langgraph-travel-assistant/actions/workflows/tests.yml/badge.svg)](https://github.com/morillo/langgraph-travel-assistant/actions/workflows/tests.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Python 3.11–3.12](https://img.shields.io/badge/python-3.11%E2%80%933.12-blue.svg)](pyproject.toml)
+
 A travel assistant AI agent built with LangGraph and GPT-4o, fully instrumented
 with OpenTelemetry and observable through the open-source
 [Phoenix](https://github.com/Arize-ai/phoenix) platform.
+
+![Phoenix traces with LLM-as-a-judge annotations](docs/images/phoenix-traces.png)
+
+*Every agent invocation is traced end-to-end. LLM-as-a-judge scores
+(`user_frustration`, `tool_usage_correctness`) are attached to each trace as
+span annotations, with latency percentiles tracked per project.*
 
 ## Features
 
@@ -233,3 +243,9 @@ Returns `{"status": "ok"}` when the service is running.
   `user_frustration` (was the user likely frustrated?) and `tool_usage_correctness`
   (did the agent use the right tool?). Scores are uploaded as span annotations
   and as a structured experiment for trend tracking across releases.
+
+---
+
+## License
+
+[MIT](LICENSE)
