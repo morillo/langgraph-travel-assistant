@@ -170,7 +170,7 @@ The Phoenix Python client (`arize-phoenix` on PyPI) is pinned to `==7.0.0` in th
 Upgrading the client to 16.x would require migrating the entire agent to openai 2.x and updating all LangChain dependencies — a separate, significant effort unrelated to this project's scope.
 
 **What this means in practice:**
-- The Phoenix Python *client* (7.0.0) talks to the Phoenix *server* (latest Docker image, currently 16.3.0)
+- The Phoenix Python *client* (7.0.0) talks to the Phoenix *server* (latest Docker image, currently 20.x)
 - A version mismatch warning is printed at runtime — this is cosmetic and does not affect functionality
 - All features used by this project work correctly across the version gap: `run_experiment()`, `upload_dataset()`, `get_spans_dataframe()`, and span annotations via the REST API
 
