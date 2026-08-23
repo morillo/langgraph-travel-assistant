@@ -1,0 +1,48 @@
+# Environment
+.env
+*.env
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pycache
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Docker
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Exports / outputs
+spans_export.csv
+evals/frustrated_dataset.csv
+scripts/query_results.json
+evals/all_evaluations.csv
+evals/evaluation_results.json
+
+# Debug / scratch files
+evals/debug_spans.py
+evals/probe_api.py

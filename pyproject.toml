@@ -1,0 +1,46 @@
+[tool.poetry]
+name = "langgraph-travel-assistant"
+version = "1.0.0"
+description = "Travel assistant LangGraph agent with OpenTelemetry tracing and LLM-as-a-judge evaluations"
+authors = ["Carlos Morillo <carlos.morillo@gmail.com>"]
+readme = "README.md"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = ">=3.11,<3.13"
+langgraph = "^0.2"
+langchain = "^0.3"
+langchain-community = "^0.3"
+langchain-openai = "^0.2"
+ddgs = "^9.0"
+python-dotenv = "^1.0"
+fastapi = "^0.115"
+uvicorn = "^0.32"
+requests = "^2.32"
+# Observability — pure OpenTelemetry SDK + OpenInference instrumentation.
+# Phoenix runs as a separate Docker container; the app ships traces to it via OTLP/HTTP.
+# The app server depends only on standard OTel APIs — the Phoenix client is used only in evals.
+openinference-instrumentation-langchain = ">=0.1.0"
+opentelemetry-sdk = ">=1.20.0"
+opentelemetry-exporter-otlp-proto-http = ">=1.20.0"
+# Evaluation pipeline dependencies
+openai = "^1.0"
+pandas = "^2.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.0"
+pytest-asyncio = "^0.23"
+
+[tool.poetry.group.evals.dependencies]
+# The Phoenix client (arize-phoenix on PyPI) is pinned to 7.0.0 — the highest
+# version compatible with openai ^1.0. Versions >=16.x require pydantic-ai-slim,
+# which pulls in openai>=2.29.0 and conflicts with langchain-openai's openai ^1.0
+# requirement. The 7.0.0 client works against the latest Phoenix server for all
+# features we use: run_experiment(), upload_dataset(), get_spans_dataframe().
+arize-phoenix = "==7.0.0"
+httpx = "<0.28"
+nest-asyncio = ">=1.5"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
