@@ -41,6 +41,7 @@ langgraph-travel-assistant/
 ├── scripts/
 │   └── run_queries.py    # Generates 10 evaluation traces
 ├── evals/
+│   ├── eval_pipeline.py  # One-command pipeline: queries → judge → dataset → experiment
 │   ├── evaluate.py       # LLM-as-a-judge pipeline + span annotations
 │   └── run_experiment.py # Structured experiment (run_experiment())
 ├── docs/
@@ -148,6 +149,20 @@ poetry run pytest tests/ -v
 ## Evaluation Pipeline
 
 After the API server is running and Phoenix has traces:
+
+**One command (recommended):**
+
+```bash
+poetry install --with evals
+poetry run python evals/eval_pipeline.py
+```
+
+This runs the full loop — sends the 10 evaluation queries to the live agent,
+scores every response with an LLM-as-a-judge (GPT-4o-mini), uploads the scores
+as span annotations, and registers a versioned Phoenix experiment so results
+accumulate across runs.
+
+**Or step by step:**
 
 ```bash
 # Step 1 — Generate 10 evaluation traces

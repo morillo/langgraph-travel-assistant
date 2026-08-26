@@ -224,7 +224,7 @@ push / PR to main
 
 ### Prompt Version Control
 
-Prompt templates are stored in version-controlled files (`app/prompts/`) rather than hardcoded in Python. Each prompt change triggers a full eval run. Phoenix's Experiments tab provides a side-by-side score comparison between the old and new prompt, making regressions immediately visible before production promotion.
+In production, prompt templates move out of Python and into version-controlled files (`app/prompts/`) — in the current prototype the system prompt lives in `app/agent.py`. Each prompt change triggers a full eval run. Phoenix's Experiments tab provides a side-by-side score comparison between the old and new prompt, making regressions immediately visible before production promotion.
 
 ### Model Upgrade Path
 
