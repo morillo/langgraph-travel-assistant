@@ -57,7 +57,7 @@ langgraph-travel-assistant/
 ## Prerequisites
 
 - [Docker Desktop](https://www.docker.com/products/docker-desktop/) — for the Docker Compose path
-- **or** Python 3.11–3.12 + [Poetry](https://python-poetry.org/docs/#installation) — for the local dev path
+- **or** [uv](https://docs.astral.sh/uv/) — for the local dev path (uv installs the pinned Python 3.12 and all dependencies)
 - An [OpenAI API key](https://platform.openai.com/api-keys)
 
 ---
@@ -101,12 +101,12 @@ docker compose down
 
 ---
 
-## Option B — Local Development (Poetry)
+## Option B — Local Development (uv)
 
 ### 1. Install dependencies
 
 ```bash
-poetry install
+uv sync   # creates .venv with the pinned Python and all dependency groups
 ```
 
 ### 2. Configure environment
@@ -125,7 +125,7 @@ docker run -p 6006:6006 arizephoenix/phoenix:latest
 ### 4. Start the API server
 
 ```bash
-poetry run uvicorn app.api:app --reload --port 8000
+uv run uvicorn app.api:app --reload --port 8000
 ```
 
 ### 5. Test it
@@ -141,7 +141,7 @@ curl -X POST http://localhost:8000/chat \
 ## Run Tests
 
 ```bash
-poetry run pytest tests/ -v
+uv run pytest tests/ -v
 ```
 
 ---
@@ -153,8 +153,8 @@ After the API server is running and Phoenix has traces:
 **One command (recommended):**
 
 ```bash
-poetry install --with evals
-poetry run python evals/eval_pipeline.py
+uv sync
+uv run python evals/eval_pipeline.py
 ```
 
 This runs the full loop — sends the 10 evaluation queries to the live agent,
@@ -166,14 +166,14 @@ accumulate across runs.
 
 ```bash
 # Step 1 — Generate 10 evaluation traces
-poetry run python scripts/run_queries.py
+uv run python scripts/run_queries.py
 
 # Step 2 — Run LLM-as-a-judge evaluations + upload annotations to Phoenix
-poetry run python evals/evaluate.py
+uv run python evals/evaluate.py
 
 # Step 3 — Run a structured experiment over the evaluation dataset
-poetry install --with evals
-poetry run python evals/run_experiment.py
+uv sync
+uv run python evals/run_experiment.py
 ```
 
 Results are visible in Phoenix under **Datasets & Experiments**.

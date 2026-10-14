@@ -49,7 +49,7 @@ Methodology:
 
 Usage:
     Make sure Phoenix is running: docker run -p 6006:6006 arizephoenix/phoenix:latest
-    poetry run python evals/evaluate.py --with evals
+    uv run python evals/evaluate.py
 """
 
 import json
@@ -77,7 +77,7 @@ except Exception as _phoenix_err:
     SpanEvaluations = None  # type: ignore[assignment,misc]
     _PHOENIX_AVAILABLE = False
     print(f"  [warn] Phoenix client import failed: {_phoenix_err}")
-    print("  [warn] Install with: poetry install --with evals")
+    print("  [warn] Install with: uv sync")
 
 # ---------------------------------------------------------------------------
 # Configuration
@@ -440,7 +440,7 @@ def main() -> None:
     # ── Load query results ────────────────────────────────────────────────
     if not QUERY_RESULTS_PATH.exists():
         print(f"ERROR: {QUERY_RESULTS_PATH} not found.")
-        print("Run: poetry run python scripts/run_queries.py")
+        print("Run: uv run python scripts/run_queries.py")
         return
 
     with open(QUERY_RESULTS_PATH) as f:

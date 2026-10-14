@@ -24,10 +24,10 @@ Query design rationale:
 Usage:
     Make sure both services are running first:
       1. docker run -p 6006:6006 arizephoenix/phoenix:latest
-      2. poetry run uvicorn app.api:app --reload
+      2. uv run uvicorn app.api:app --reload
 
     Then run:
-      poetry run python scripts/run_queries.py
+      uv run python scripts/run_queries.py
 
     All 10 traces will be visible in Phoenix at http://localhost:6006
 """
@@ -186,7 +186,7 @@ def main() -> None:
         requests.get("http://localhost:8000/health", timeout=5).raise_for_status()
     except Exception:
         print("\nERROR: Cannot reach the API server at http://localhost:8000")
-        print("Start it with: poetry run uvicorn app.api:app --reload")
+        print("Start it with: uv run uvicorn app.api:app --reload")
         return
 
     results = []

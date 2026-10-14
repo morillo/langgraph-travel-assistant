@@ -27,12 +27,12 @@ Workflow
 Usage
 -----
     # Make sure Phoenix + the API server are both running, then:
-    poetry run python evals/run_experiment.py --with evals
+    uv run python evals/run_experiment.py
 
 Prerequisites
 -------------
     Docker: docker run -p 6006:6006 arizephoenix/phoenix:latest
-    API:    poetry run uvicorn app.api:app --reload --port 8000
+    API:    uv run uvicorn app.api:app --reload --port 8000
 """
 
 import json

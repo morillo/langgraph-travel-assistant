@@ -31,8 +31,8 @@ Result in Phoenix:
 
 Usage:
     # Make sure Phoenix and the API server are running, then:
-    poetry install --with evals
-    poetry run python evals/eval_pipeline.py
+    uv sync
+    uv run python evals/eval_pipeline.py
 """
 
 import json
@@ -428,7 +428,7 @@ def main() -> None:
         http_requests.get("http://localhost:8000/health", timeout=5).raise_for_status()
     except Exception:
         print("\nERROR: Cannot reach agent at http://localhost:8000")
-        print("Start it with:  poetry run uvicorn app.api:app --reload")
+        print("Start it with:  uv run uvicorn app.api:app --reload")
         return
 
     try:
