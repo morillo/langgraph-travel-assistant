@@ -65,7 +65,7 @@ The application is already containerized (see `Dockerfile` and `docker-compose.y
 
 ```
 Dockerfile (multi-stage)
-  Stage 1 — builder : install poetry deps, compile requirements
+  Stage 1 — builder : install deps from uv.lock with uv sync
   Stage 2 — runtime : copy only the virtualenv, no build tools
   Result           : lean ~180 MB image, no dev dependencies at runtime
 ```

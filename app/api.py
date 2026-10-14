@@ -44,7 +44,7 @@ load_dotenv()
 logger = logging.getLogger(__name__)
 
 # PHOENIX_COLLECTOR_ENDPOINT lets callers override the Phoenix host.
-# - Local dev (Poetry):  defaults to http://localhost:6006/v1/traces
+# - Local dev (uv):  defaults to http://localhost:6006/v1/traces
 # - Docker Compose:      set to http://phoenix:6006/v1/traces (service name)
 _phoenix_base = os.getenv("PHOENIX_COLLECTOR_ENDPOINT", "http://localhost:6006")
 PHOENIX_ENDPOINT = f"{_phoenix_base.rstrip('/')}/v1/traces"
