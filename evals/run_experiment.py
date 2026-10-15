@@ -55,7 +55,7 @@ load_dotenv()
 # ---------------------------------------------------------------------------
 import phoenix as px
 from phoenix.experiments import run_experiment
-from phoenix.experiments.types import Example
+from phoenix.experiments.types import Dataset, Example, RanExperiment
 
 # ---------------------------------------------------------------------------
 # Configuration
@@ -127,7 +127,7 @@ def run_judge(template: str, **kwargs) -> dict:
             temperature=0,
             response_format={"type": "json_object"},
         )
-        return json.loads(resp.choices[0].message.content)
+        return json.loads(resp.choices[0].message.content or "{}")
     except Exception as exc:
         return {"label": "error", "score": None, "explanation": str(exc)}
 
@@ -135,7 +135,7 @@ def run_judge(template: str, **kwargs) -> dict:
 # ---------------------------------------------------------------------------
 # Step 1 — Upload dataset to Phoenix
 # ---------------------------------------------------------------------------
-def upload_dataset() -> px.experiments.types.Dataset:
+def upload_dataset() -> Dataset:
     """Upload the 10 evaluation queries as a Phoenix Dataset.
 
     Returns the Dataset object required by run_experiment().
@@ -176,7 +176,8 @@ def run_agent_task(example: Example) -> dict:
     run_experiment() calls this once per dataset example.
     Returns a dict with the agent's response for the evaluators to consume.
     """
-    question = example.input.get("message", "")
+    inputs = example.input if isinstance(example.input, dict) else {}
+    question = str(inputs.get("message", ""))
     print(f"    → Running agent: {question[:60]}...")
     try:
         resp = http_requests.post(
@@ -237,7 +238,7 @@ def tool_usage_eval(output, input, expected) -> float:  # noqa: A002
 # ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
-def main() -> None:
+def main() -> RanExperiment | None:
     now = datetime.now().strftime("%Y-%m-%d %H:%M")
     print("=" * 65)
     print("  Travel Assistant — Phoenix Experiment Runner")

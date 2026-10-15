@@ -13,10 +13,10 @@ The LLM decides autonomously which tool(s) to call, in which order, and
 when enough information has been gathered to produce a final response.
 """
 import operator
-from typing import Annotated, Literal
+from typing import Annotated
 
 from dotenv import load_dotenv
-from langchain_core.messages import AnyMessage, SystemMessage, ToolMessage
+from langchain_core.messages import AIMessage, AnyMessage, SystemMessage, ToolMessage
 from langchain_openai import ChatOpenAI
 from langgraph.graph import END, START, StateGraph
 from typing_extensions import TypedDict
@@ -100,7 +100,9 @@ def tool_node(state: MessagesState) -> dict:
     in its next turn.
     """
     results = []
-    for tool_call in state["messages"][-1].tool_calls:
+    last_message = state["messages"][-1]
+    assert isinstance(last_message, AIMessage), "tool_node runs only after an AI message"
+    for tool_call in last_message.tool_calls:
         tool = tools_by_name[tool_call["name"]]
         observation = tool.invoke(tool_call["args"])
         results.append(
@@ -112,7 +114,7 @@ def tool_node(state: MessagesState) -> dict:
 # ---------------------------------------------------------------------------
 # Routing
 # ---------------------------------------------------------------------------
-def should_continue(state: MessagesState) -> Literal["tool_node", "__end__"]:
+def should_continue(state: MessagesState) -> str:
     """Route the graph after each LLM call.
 
     Returns:
@@ -120,7 +122,7 @@ def should_continue(state: MessagesState) -> Literal["tool_node", "__end__"]:
         END          if the LLM produced a final answer.
     """
     last_message = state["messages"][-1]
-    if last_message.tool_calls:
+    if isinstance(last_message, AIMessage) and last_message.tool_calls:
         return "tool_node"
     return END
 

@@ -55,7 +55,7 @@ load_dotenv()
 # ---------------------------------------------------------------------------
 import phoenix as px
 from phoenix.experiments import run_experiment
-from phoenix.experiments.types import Dataset, Example
+from phoenix.experiments.types import Dataset, Example, RanExperiment
 from phoenix.trace import SpanEvaluations
 
 # ---------------------------------------------------------------------------
@@ -269,11 +269,12 @@ def _fetch_span_ids(queries: list[dict], pipeline_start: datetime) -> dict[str, 
         if ps.tzinfo is None:
             ps = ps.replace(tzinfo=timezone.utc)
 
+        assert isinstance(df, pd.DataFrame)
         recent = df.copy()
         try:
             recent[start_col] = pd.to_datetime(recent[start_col], utc=True)
-            recent = recent[recent[start_col] >= ps]
-            recent = recent.sort_values(start_col, ascending=True)
+            mask = recent[start_col] >= ps
+            recent = recent.loc[mask, :].sort_values(start_col, ascending=True)
         except Exception:
             recent = df  # if time filtering fails, use all root spans
 
@@ -296,7 +297,7 @@ def _run_judge(template: str, **kwargs) -> dict:
             temperature=0,
             response_format={"type": "json_object"},
         )
-        result = json.loads(resp.choices[0].message.content)
+        result = json.loads(resp.choices[0].message.content or "{}")
         return result
     except Exception as exc:
         return {"label": "error", "score": None, "explanation": str(exc)}
@@ -385,7 +386,8 @@ def _get_or_create_dataset() -> Dataset:
 # ---------------------------------------------------------------------------
 def _task(example: Example) -> dict:
     """Return pre-collected agent response — no second agent call."""
-    question = example.input.get("message", "")
+    inputs = example.input if isinstance(example.input, dict) else {}
+    question = str(inputs.get("message", ""))
     return _results.get(question, {"message": question, "response": "[not collected]"})
 
 
@@ -412,7 +414,7 @@ def tool_usage_eval(output, input) -> float:  # noqa: A002
 # ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
-def main() -> None:
+def main() -> RanExperiment | None:
     now = datetime.now().strftime("%Y-%m-%d %H:%M")
     print("=" * 65)
     print("  Travel Assistant — Evaluation Pipeline")
