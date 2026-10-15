@@ -420,7 +420,7 @@ def run_judge(template: str, **kwargs) -> dict:
             temperature=0,  # Deterministic — same input → same label
             response_format={"type": "json_object"},
         )
-        raw = response.choices[0].message.content
+        raw = response.choices[0].message.content or ""
         result = json.loads(raw)
         result["raw_response"] = raw
         return result
